@@ -23,12 +23,14 @@ public class FileCreator {
     
     private final Path theDir;
     private final ArrayList<String> filenames;
+    private final String extension;
     
     public FileCreator(int numFiles) throws IOException {
+        this.extension = "garbage";
         // Generate a bunch of filenames
         filenames = populateFilenames(numFiles);
         // Populate a temp dir with files matching those names
-        theDir = populateTempDir(filenames);
+        theDir = populateTempDir(filenames, extension);
     }
     
     public Path getDir() {
@@ -37,6 +39,10 @@ public class FileCreator {
     
     public ArrayList<String> getNames() {
         return filenames; // @TODO replace this with a defensive copy or a read only view
+    }
+    
+    public String getExtension() {
+        return extension;
     }
     
     /**
@@ -58,11 +64,11 @@ public class FileCreator {
         return list;
     }
     
-    private Path populateTempDir(ArrayList<String> names) throws IOException {
+    private Path populateTempDir(ArrayList<String> names, String ext) throws IOException {
         // Create a directory in system temp dir to put this crap
         Path dir = Files.createTempDirectory("net.psexton.findfiletimer");
         for(String name : names) {
-            Path file = Files.createFile(dir.resolve(name));
+            Path file = Files.createFile(dir.resolve(name + "." + ext));
             fillFile(file);
         }
         return dir;
